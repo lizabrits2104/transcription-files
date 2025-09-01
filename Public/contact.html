@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: #6b7280; /* Gray-500 */
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #4b5563; /* Gray-600 */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900">
+    
+    <!-- Main Content Container -->
+    <div class="max-w-screen-xl mx-auto">
+
+        <!-- Contact Section -->
+        <section class="py-16 md:py-24 bg-white rounded-2xl shadow-sm">
+            <div class="container mx-auto px-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <!-- Contact Details Column -->
+                    <div class="bg-gray-50 p-8 rounded-xl shadow-inner">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">Contact Information</h3>
+                        <div class="space-y-6">
+                            <div class="flex items-start space-x-4">
+                                <i class="fas fa-envelope text-blue-600 text-2xl mt-1"></i>
+                                <div>
+                                    <h4 class="text-lg font-semibold text-gray-800">Email Address</h4>
+                                    <p class="text-gray-600">
+                                        <a href="mailto:info@yourcompany.com" class="hover:underline">info@yourcompany.com</a>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-4">
+                                <i class="fas fa-phone-alt text-blue-600 text-2xl mt-1"></i>
+                                <div>
+                                    <h4 class="text-lg font-semibold text-gray-800">Phone Number</h4>
+                                    <p class="text-gray-600">+27 12 345 6789</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-4">
+                                <i class="fas fa-map-marker-alt text-blue-600 text-2xl mt-1"></i>
+                                <div>
+                                    <h4 class="text-lg font-semibold text-gray-800">Office Location</h4>
+                                    <p class="text-gray-600">123 Business Avenue, City, Country</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8">
+                            <h4 class="text-lg font-semibold text-gray-800 mb-4">Follow Us</h4>
+                            <div class="flex space-x-4">
+                                <a href="#" class="text-gray-600 hover:text-blue-600 transition-colors"><i class="fab fa-facebook-f text-2xl"></i></a>
+                                <a href="#" class="text-gray-600 hover:text-blue-600 transition-colors"><i class="fab fa-twitter text-2xl"></i></a>
+                                <a href="#" class="text-gray-600 hover:text-blue-600 transition-colors"><i class="fab fa-linkedin-in text-2xl"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Form Column -->
+                    <div class="bg-gray-50 p-8 rounded-xl shadow-inner">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">Send Us a Message</h3>
+                        <form id="contactForm">
+                            <div class="mb-4">
+                                <label for="name" class="block text-gray-700 font-medium mb-2">Your Name</label>
+                                <input type="text" id="name" name="name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors" required>
+                            </div>
+                            <div class="mb-4">
+                                <label for="email" class="block text-gray-700 font-medium mb-2">Email Address</label>
+                                <input type="email" id="email" name="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors" required>
+                            </div>
+                            <div class="mb-4">
+                                <label for="subject" class="block text-gray-700 font-medium mb-2">Subject</label>
+                                <input type="text" id="subject" name="subject" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors" required>
+                            </div>
+                            <div class="mb-6">
+                                <label for="message" class="block text-gray-700 font-medium mb-2">Your Message</label>
+                                <textarea id="message" name="message" rows="5" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors" required></textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:bg-blue-700 transition-transform transform hover:scale-105">
+                                Send Message
+                            </button>
+                        </form>
+                        <div id="formMessage" class="mt-4 p-4 rounded-lg text-center hidden" role="alert"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action Section -->
+        <section id="quote" class="py-16 md:py-24 bg-gray-800 text-white text-center rounded-b-2xl mt-4">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Ready to Get Started?</h2>
+                <p class="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
+                    Get an instant quote and let us handle your transcription needs. Fast, accurate, and affordable.
+                </p>
+                <!-- Note: This link should be updated to your quote page URL -->
+                <a href="/your-quote-page-url.html" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg hover:bg-blue-700 transition-transform transform hover:scale-105">Get a Custom Quote</a>
+            </div>
+        </section>
+
+    </div>
+    <!-- End of Main Content Container -->
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 py-8 mt-8">
+        <div class="container mx-auto px-4 text-center text-sm md:text-left">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="font-bold text-lg mb-2 text-white">Your Company</h3>
+                    <p>Providing accurate and reliable transcription services for businesses and individuals.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-2 text-white">Contact</h3>
+                    <p>Email: info@yourcompany.com</p>
+                    <p>Phone: +27 12 345 6789</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-2 text-white">Follow Us</h3>
+                    <div class="flex justify-center md:justify-start space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 text-center text-gray-500">
+                &copy; 2024 Your Transcription Company. All rights reserved.
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevents the default form submission
+
+            const formMessage = document.getElementById('formMessage');
+            const button = this.querySelector('button[type="submit"]');
+
+            // Show a temporary loading message and disable the button
+            button.disabled = true;
+            button.textContent = 'Sending...';
+
+            const formData = new FormData(this);
+
+            fetch('/contact', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                // Check if the response is OK before parsing JSON
+                if (!response.ok) {
+                    throw new Error('Network response was not ok.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    formMessage.textContent = 'Thank you for your message! We will get back to you shortly.';
+                    formMessage.className = 'mt-4 p-4 rounded-lg bg-green-100 text-green-700 text-center block';
+                    this.reset();
+                } else {
+                    formMessage.textContent = data.message || 'There was an error sending your message. Please try again later.';
+                    formMessage.className = 'mt-4 p-4 rounded-lg bg-red-100 text-red-700 text-center block';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                formMessage.textContent = 'There was an error sending your message. Please try again later.';
+                formMessage.className = 'mt-4 p-4 rounded-lg bg-red-100 text-red-700 text-center block';
+            })
+            .finally(() => {
+                // Re-enable the button and restore the text
+                button.disabled = false;
+                button.textContent = 'Send Message';
+            });
+        });
+    </script>
+</body>
+</html>
