@@ -26,16 +26,6 @@ app.use(express.json());
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-// Serve static files from the 'public' directory
-app.use(express.static(path.join(__dirname, 'public')));
-
-// --- Routes ---
-
-// Route to serve the main HTML file
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'your-quote-page.html'));
-});
-
 // Handle the quote form submission
 app.post('/submit-quote', upload.single('file_upload'), async (req, res) => {
   try {
