@@ -84,9 +84,10 @@ app.post('/submit-quote', upload.single('file_upload'), async (req, res) => {
       port: 465,
       secure: true,
       auth: {
-        user: process.env.NODEMAILER_EMAIL,
-        pass: process.env.NODEMAILER_PASSWORD
-      }
+        auth: {
+    user: process.env.NODEMAILER_EMAIL,
+    pass: process.env.NODEMAILER_PASSWORD
+}
     });
 
     const mailOptions = {
