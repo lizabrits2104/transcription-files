@@ -12,6 +12,19 @@ const s3 = new AWS.S3({
 
 const app = express();
 
+// CORS middleware - CRITICAL for cross-origin requests
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*'); // In production, replace * with your domain
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    
+    if (req.method === 'OPTIONS') {
+        res.sendStatus(200);
+    } else {
+        next();
+    }
+});
+
 // Middleware to parse URL-encoded bodies and JSON bodies
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -19,9 +32,26 @@ app.use(express.json());
 // Handle the quote form submission
 app.post('/submit-quote', async (req, res) => {
     try {
+        console.log('Received quote submission:', req.body); // Debug logging
+        
         const { company, name, email, contact_no, service_type, turnaround_time, length, multiple_speakers, poor_audio, verbatim, time_stamping, fileUrl } = req.body;
 
-        const transporter = nodemailer.createTransport({
+        // Validation
+        if (!name || !email || !contact_no || !service_type || !turnaround_time || !length) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Missing required fields' 
+            });
+        }
+
+        if (!fileUrl) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'File upload failed. Please try again.' 
+            });
+        }
+
+        const transporter = nodemailer.createTransporter({
             host: 'smtp.hostinger.com',
             port: 465,
             secure: true,
@@ -32,7 +62,7 @@ app.post('/submit-quote', async (req, res) => {
         });
 
         const mailOptions = {
-            from: '"HTTranstext" info@httranstxt.co.za',
+            from: '"HTTranstext" <info@httranstxt.co.za>', // Fixed syntax
             to: 'info@httranstxt.co.za',
             subject: `New Transcription Quote Request from ${name}`,
             html: `
@@ -56,16 +86,25 @@ app.post('/submit-quote', async (req, res) => {
                     <li><strong>Verbatim:</strong> ${verbatim ? 'Yes' : 'No'}</li>
                     <li><strong>Time-stamping:</strong> ${time_stamping ? 'Yes' : 'No'}</li>
                 </ul>
-                <p><strong>Link to File:</strong> ${fileUrl}</p>
+                <p><strong>Link to File:</strong> <a href="${fileUrl}">${fileUrl}</a></p>
             `,
         };
 
         await transporter.sendMail(mailOptions);
-        res.status(200).send('Quote request submitted successfully!');
+        console.log('Email sent successfully');
+        
+        res.status(200).json({ 
+            success: true, 
+            message: 'Quote request submitted successfully!' 
+        });
 
     } catch (error) {
         console.error('Error handling quote submission:', error);
-        res.status(500).send('An error occurred. Please try again later.');
+        res.status(500).json({ 
+            success: false, 
+            message: 'An error occurred. Please try again later.',
+            error: error.message 
+        });
     }
 });
 
@@ -74,7 +113,7 @@ app.post('/contact', async (req, res) => {
     const { name, email, subject, message } = req.body;
 
     try {
-        const transporter = nodemailer.createTransport({
+        const transporter = nodemailer.createTransporter({
             host: 'smtp.hostinger.com',
             port: 465,
             secure: true,
@@ -113,21 +152,50 @@ app.post('/contact', async (req, res) => {
 // Route to Generate a Pre-signed Upload URL
 app.post('/generate-upload-url', async (req, res) => {
     try {
+        console.log('Generating upload URL for:', req.body); // Debug logging
+        
         const { fileName, fileType } = req.body;
+        
+        if (!fileName) {
+            return res.status(400).json({ error: 'fileName is required' });
+        }
+
+        // Generate unique filename to prevent conflicts
+        const timestamp = Date.now();
+        const uniqueFileName = `${timestamp}-${fileName}`;
+        
         const s3Params = {
-            Bucket: 'transcription files1',
-            Key: fileName,
-            Expires: 60, // The URL will be valid for 60 seconds
-            ContentType: fileType,
+            Bucket: 'transcription-files1', // Fixed bucket name (no spaces)
+            Key: uniqueFileName,
+            Expires: 300, // Increased to 5 minutes for large files
+            ContentType: fileType || 'application/octet-stream',
         };
 
         const uploadUrl = await s3.getSignedUrlPromise('putObject', s3Params);
+        console.log('Generated upload URL successfully');
+        
         res.status(200).json({ uploadUrl });
     } catch (error) {
         console.error('Error generating upload URL:', error);
-        res.status(500).json({ error: 'Failed to generate upload URL.' });
+        res.status(500).json({ 
+            error: 'Failed to generate upload URL.',
+            details: error.message 
+        });
     }
 });
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'OK', timestamp: new Date().toISOString() });
+});
+
+// For local development
+if (process.env.NODE_ENV !== 'production') {
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
+}
 
 // Export the Express app as a Vercel serverless function
 module.exports = app;
