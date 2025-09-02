@@ -269,7 +269,7 @@
         }
 
         // 1. Get a pre-signed URL from your serverless function
-        const response = await fetch('/generate-upload-url', {
+        const response = await fetch('/api/generate-upload-url', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -321,7 +321,7 @@
         formObject.fileUrl = fileUrl; // Add the file URL to the object
 
         // 4. Submit the rest of the form data to the serverless function
-        const formResponse = await fetch('/submit-quote', {
+        const formResponse = await fetch('/api/submit-quote', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
