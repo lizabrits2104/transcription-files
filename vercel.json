@@ -4,5 +4,11 @@
     "api/index.js": {
       "maxDuration": 30
     }
-  }
+  },
+  "routes": [
+    {
+      "src": "/",
+      "dest": "/get-your-quote.html"
+    }
+  ]
 }
