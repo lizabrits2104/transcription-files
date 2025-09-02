@@ -2,7 +2,7 @@
   "name": "transcription-backend",
   "version": "1.0.0",
   "description": "Backend for transcription quote and file upload.",
-  "main": "index.js",
+  "main": "api/index.js",
   "scripts": {
     "start": "node index.js"
   },

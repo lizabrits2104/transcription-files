@@ -1,26 +1,8 @@
 {
   "version": 2,
   "functions": {
-    "index.js": {
+    "api/index.js": {
       "maxDuration": 30
     }
-  },
-  "routes": [
-    {
-      "src": "/generate-upload-url",
-      "dest": "/index.js"
-    },
-    {
-      "src": "/submit-quote",
-      "dest": "/index.js"
-    },
-    {
-      "src": "/contact",
-      "dest": "/index.js"
-    },
-    {
-      "src": "/health",
-      "dest": "/index.js"
-    }
-  ]
+  }
 }
