@@ -269,43 +269,82 @@
 
             // Handle form submission
             quoteForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                
-                // Show loading state
-                submitBtn.textContent = 'Submitting...';
-                submitBtn.disabled = true;
-                
-                try {
-                    const formData = new FormData(quoteForm);
-                    
-                    const response = await fetch('/submit-quote', {
-                        method: 'POST',
-                        body: formData
-                    });
-                    
-                    if (response.ok) {
-                        // Success
-                        quoteMessage.textContent = "Thank you! We have received your request and will contact you shortly with a final quote.";
-                        quoteMessage.classList.add('text-lg', 'text-center', 'font-semibold');
-                        quotePriceSpan.parentNode.classList.add('hidden');
-                        quoteDisplay.classList.remove('hidden');
-                        
-                        // Reset form
-                        quoteForm.reset();
-                        populateTurnaroundTimes();
-                        updateQuote();
-                    } else {
-                        throw new Error('Server error');
-                    }
-                } catch (error) {
-                    console.error('Error submitting form:', error);
-                    alert('There was an error submitting your request. Please try again.');
-                } finally {
-                    // Reset button state
-                    submitBtn.textContent = 'Submit Quote Request';
-                    submitBtn.disabled = false;
-                }
-            });
+    e.preventDefault();
+
+    submitBtn.textContent = 'Uploading file...';
+    submitBtn.disabled = true;
+
+    try {
+        const fileInput = document.getElementById('file_upload');
+        const file = fileInput.files[0];
+
+        if (!file) {
+            throw new Error('No file selected.');
+        }
+
+        // 1. Get a pre-signed URL from your serverless function
+        const response = await fetch('/generate-upload-url', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                fileName: file.name,
+                fileType: file.type
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to get upload URL.');
+        }
+
+        const { uploadUrl } = await response.json();
+
+        // 2. Upload the file directly to Z1Storage using the pre-signed URL
+        submitBtn.textContent = 'Submitting...';
+        await fetch(uploadUrl, {
+            method: 'PUT',
+            body: file,
+            headers: {
+                'Content-Type': file.type,
+            },
+        });
+
+        // Construct a URL to the uploaded file
+        const fileUrl = uploadUrl.split('?')[0];
+
+        // 3. Submit the rest of the form data to the serverless function
+        const formData = new FormData(quoteForm);
+        formData.append('fileUrl', fileUrl); // Append the Z1Storage URL
+
+        const formResponse = await fetch('/submit-quote', {
+            method: 'POST',
+            body: new URLSearchParams(formData),
+        });
+
+        if (formResponse.ok) {
+            // Success
+            quoteMessage.textContent = "Thank you! We have received your request and will contact you shortly with a final quote.";
+            quoteMessage.classList.add('text-lg', 'text-center', 'font-semibold');
+            quotePriceSpan.parentNode.classList.add('hidden');
+            quoteDisplay.classList.remove('hidden');
+
+            // Reset form
+            quoteForm.reset();
+            populateTurnaroundTimes();
+            updateQuote();
+        } else {
+            throw new Error('Server error');
+        }
+
+    } catch (error) {
+        console.error('Error submitting form:', error);
+        alert('There was an error submitting your request. Please try again.');
+    } finally {
+        submitBtn.textContent = 'Submit Quote Request';
+        submitBtn.disabled = false;
+    }
+})
             
             // Initial setup on page load
             populateTurnaroundTimes();
