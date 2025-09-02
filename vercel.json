@@ -7,6 +7,14 @@
   },
   "routes": [
     {
+      "src": "/pricing/",
+      "dest": "/your-quote-page.html"
+    },
+    {
+      "src": "/get-an-instant-quote/",
+      "dest": "/your-quote-page.html"
+    },
+    {
       "src": "/",
       "dest": "/your-quote-page.html"
     }
