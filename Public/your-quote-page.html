@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pricing & Get a Quote</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Inter font -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
     <style>
         body {
@@ -27,21 +25,16 @@
 </head>
 <body class="bg-gray-100 text-gray-900 flex items-center justify-center min-h-screen p-4">
 
-<!-- Quote Form Container -->
-    <div class="w-full bg-white rounded-2xl shadow-xl overflow-hidden">
-        <!-- Form and Content Section -->
+<div class="w-full bg-white rounded-2xl shadow-xl overflow-hidden">
         <div class="p-6 md:p-8 space-y-8">
-    
-                <!-- Information Panel (from original form) -->
+       
                 <div class="bg-blue-50 border border-blue-200 text-blue-800 p-4 rounded-lg shadow-sm mt-8">
                     <p class="font-medium">Please note:</p>
                     <p class="text-sm mt-1">This is an estimated quote. The final price may vary based on audio quality, number of speakers, and specific requirements. We will provide a final, fixed quote after reviewing your file.</p>
                 </div>
 
-                <!-- The main form -->
                 <form id="quote-form" class="space-y-6 mt-6" method="POST" action="/submit-quote" enctype="multipart/form-data">
                     
-                    <!-- Client Details -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="company" class="block text-sm font-medium text-gray-700">Company</label>
@@ -64,7 +57,6 @@
                         </div>
                     </div>
 
-                    <!-- Transcription Details -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="service_type" class="block text-sm font-medium text-gray-700">Service Type</label>
@@ -73,23 +65,20 @@
                                 <option value="legal">Legal transcription</option>
                                 <option value="medical">Medical transcription</option>
                                 <option value="market-research">Focus groups</option>
-                                <!-- New Option for Editing Service -->
                                 <option value="editing">Editing service</option>
                             </select>
                         </div>
                         <div>
                             <label for="turnaround_time" class="block text-sm font-medium text-gray-700">Turnaround Time</label>
                             <select id="turnaround_time" name="turnaround_time" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                                <!-- Options will be populated by JavaScript -->
-                            </select>
+                                </select>
                         </div>
                     </div>
                     <div>
                         <label for="length" class="block text-sm font-medium text-gray-700">Audio/Video Length (in minutes)</label>
                         <input type="number" id="length" name="length" min="1" value="1" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                     </div>
-                    
-                    <!-- Additional Charges Checkboxes -->
+                   
                     <div class="space-y-4">
                         <p class="text-sm font-medium text-gray-700">Add-On Charges:</p>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -112,7 +101,6 @@
                         </div>
                     </div>
 
-                    <!-- File Upload -->
                     <div>
                         <label for="file_upload" class="block text-sm font-medium text-gray-700">Upload Your File</label>
                         <p class="text-xs text-gray-500 mt-1 mb-2">
@@ -128,14 +116,12 @@
                             hover:file:bg-blue-100 cursor-pointer" />
                     </div>
 
-                    <!-- Quote Display & Message Box -->
                     <div id="quote-display" class="bg-green-50 border border-green-200 text-green-800 p-4 rounded-lg shadow-sm hidden">
                         <p class="text-sm font-semibold">Your Estimated Quote:</p>
                         <div class="text-3xl font-bold mt-1 text-green-900">R<span id="quote-price">0.00</span></div>
                         <p class="text-xs text-green-600 mt-2" id="quote-message">The final price is subject to a review of your file.</p>
                     </div>
                     
-                    <!-- Submit Button -->
                     <button type="submit" id="submit-btn" class="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-blue-700 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                         Submit Quote Request
                     </button>
@@ -209,13 +195,13 @@
                     turnaroundTimeSelect.appendChild(option);
                 }
             };
-            
+           
             // Function to calculate and update the quote
             const updateQuote = () => {
                 const serviceType = serviceTypeSelect.value;
                 const turnaroundTime = turnaroundTimeSelect.value;
                 const length = parseFloat(document.getElementById('length').value);
-                
+               
                 // Checkbox states
                 const isMultipleSpeakers = document.getElementById('multiple_speakers').checked;
                 const isPoorAudio = document.getElementById('poor_audio').checked;
@@ -242,14 +228,14 @@
                 if (isTimeStamping) {
                     addOnCost += addOns.timeStamping;
                 }
-                
+               
                 price += addOnCost * length;
 
                 // Apply verbatim percentage after all other calculations
                 if (isVerbatim) {
                     price *= (1 + addOns.verbatim);
                 }
-                
+               
                 // Display the quote
                 quotePriceSpan.textContent = price.toFixed(2);
                 quoteDisplay.classList.remove('hidden');
@@ -313,13 +299,34 @@
         // Construct a URL to the uploaded file
         const fileUrl = uploadUrl.split('?')[0];
 
-        // 3. Submit the rest of the form data to the serverless function
+        // 3. Collect form data as a plain object
         const formData = new FormData(quoteForm);
-        formData.append('fileUrl', fileUrl); // Append the Z1Storage URL
+        const formObject = {};
+        formData.forEach((value, key) => {
+            if (key === 'multiple_speakers' || key === 'poor_audio' || key === 'verbatim' || key === 'time_stamping') {
+                formObject[key] = true; // Set to true if checkbox is checked
+            } else {
+                formObject[key] = value;
+            }
+        });
+        
+        // Handle unchecked checkboxes
+        const checkboxFields = ['multiple_speakers', 'poor_audio', 'verbatim', 'time_stamping'];
+        checkboxFields.forEach(key => {
+            if (document.getElementById(key) && !document.getElementById(key).checked) {
+                formObject[key] = false;
+            }
+        });
+        
+        formObject.fileUrl = fileUrl; // Add the file URL to the object
 
+        // 4. Submit the rest of the form data to the serverless function
         const formResponse = await fetch('/submit-quote', {
             method: 'POST',
-            body: new URLSearchParams(formData),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formObject),
         });
 
         if (formResponse.ok) {
@@ -345,7 +352,7 @@
         submitBtn.disabled = false;
     }
 })
-            
+           
             // Initial setup on page load
             populateTurnaroundTimes();
             updateQuote();
