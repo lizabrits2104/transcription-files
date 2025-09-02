@@ -30,7 +30,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // Handle the quote form submission
-app.post('/submit-quote', async (req, res) => {
+app.post('/api/submit-quote', async (req, res) => {
     try {
         console.log('Received quote submission:', req.body); // Debug logging
         
@@ -109,7 +109,7 @@ app.post('/submit-quote', async (req, res) => {
 });
 
 // New route for the contact form
-app.post('/contact', async (req, res) => {
+app.post('/api/contact', async (req, res) => {
     const { name, email, subject, message } = req.body;
 
     try {
@@ -150,7 +150,7 @@ app.post('/contact', async (req, res) => {
 });
 
 // Route to Generate a Pre-signed Upload URL
-app.post('/generate-upload-url', async (req, res) => {
+app.post('/api/generate-upload-url', async (req, res) => {
     try {
         console.log('Generating upload URL for:', req.body); // Debug logging
         
@@ -185,7 +185,7 @@ app.post('/generate-upload-url', async (req, res) => {
 });
 
 // Health check endpoint
-app.get('/health', (req, res) => {
+app.get('/api/health', (req, res) => {
     res.status(200).json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
